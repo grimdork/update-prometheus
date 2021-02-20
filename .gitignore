@@ -1,0 +1,4 @@
+/.vscode/
+/update-prometheus
+/receivers.d
+/targets.d
