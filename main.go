@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -24,26 +23,37 @@ func main() {
 
 	dir, err := os.ReadDir(o.Config)
 	if err != nil {
-		pr("Error reading '%s': %s", o.Config, err.Error())
+		cfmt.Printf("%red Error reading '%s':%reset %s", o.Config, err.Error())
 		os.Exit(2)
 	}
 
+	var g Global
 	jobs := Jobs{make(map[string][]Target)}
 	for _, de := range dir {
-		if !de.IsDir() && filepath.Ext(de.Name()) == ".ini" {
+		if !de.IsDir() && filepath.Ext(de.Name()) == ".ini" && de.Name() != "global.ini" {
 			fn := filepath.Join(o.Config, de.Name())
 			t, err := LoadTarget(fn)
 			if err != nil {
-				cfmt.Printf("%red Error:%reset  Couldn't load '%s': %s", de.Name(), err.Error())
+				cfmt.Printf("%red Error:%reset Couldn't load '%s': %s", de.Name(), err.Error())
 				os.Exit(2)
 			}
 
 			jobs.AddTarget(t)
 		}
-	}
-	pr("%s", jobs.YAML(4))
-}
 
-func pr(format string, v ...interface{}) {
-	fmt.Printf(format+"\n", v...)
+		if de.Name() == "global.ini" {
+			fn := filepath.Join(o.Config, de.Name())
+			g, err = LoadGlobal(fn)
+			if err != nil {
+				cfmt.Printf("%red Error:%reset Couldn't load '%s'; %s", de.Name(), err.Error())
+				os.Exit(2)
+			}
+		}
+	}
+	out := g.YAML(0) + jobs.YAML(0)
+	err = os.WriteFile(o.Out, []byte(out), 0600)
+	if err != nil {
+		cfmt.Printf("%red Error saving output:%reset %s", err.Error())
+		os.Exit(2)
+	}
 }
