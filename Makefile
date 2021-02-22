@@ -12,8 +12,8 @@ clean:
 	@rm -f update-prometheus
 	@rm -rf dist
 
-testpkg: release
+package-test:
 	@goreleaser --snapshot --skip-publish --rm-dist
 
-package: release
+package:
 	@goreleaser --rm-dist

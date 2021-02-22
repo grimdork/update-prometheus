@@ -5,8 +5,8 @@ builds:
   -
     id: "client"
     dir: "."
-    main: "./update-prometheus"
-    binary: update-prometheus
+    #main: "./update-prometheus"
+    #binary: update-prometheus
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}} 
     env:
