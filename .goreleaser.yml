@@ -2,15 +2,10 @@ before:
   hooks:
     - go mod download
 
-release:
-  prerelease: true
-
 builds:
   -
     id: "client"
     dir: "."
-    #main: "./update-prometheus"
-    #binary: update-prometheus
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}} 
     env:
@@ -21,6 +16,8 @@ builds:
     goarch:
       - amd64
       - arm64
+release:
+  prerelease: true
 
 archives:
   - replacements:
