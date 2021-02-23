@@ -1,6 +1,10 @@
 before:
   hooks:
     - go mod download
+
+release:
+  prerelease: true
+
 builds:
   -
     id: "client"
@@ -23,6 +27,7 @@ archives:
       darwin: Darwin
       linux: Linux
       amd64: x86_64
+    wrap_in_directory: true
     format_overrides:
     - goos: darwin
       format: zip
@@ -34,14 +39,14 @@ nfpms:
       linux: Linux
     vendor: grimdork.net
     homepage:
-    maintainer: Ronny Bangsund <github@neuralshortcircuit.com>
+    maintainer: Ronny Bangsund <github@grimdork.net>
     description:
     formats:
       - apk
       - deb
       - rpm
     dependencies:
-      - ca-certificates
+      - prometheus
     bindir: /usr/bin
     section: contrib
     priority: extra
